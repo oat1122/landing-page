@@ -8,13 +8,13 @@ import {
   JsonLd,
 } from "@/config/seo";
 import Navbar from "@/components/Navbar";
-import HeroSection from "@/components/HeroSection";
-import ProductsSection from "@/components/ProductsSection";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import ProcessSection from "@/components/ProcessSection";
-import FAQSection from "@/components/FAQSection";
+import HeroSection from "@/components/home/HeroSection";
+import ProductsSection from "@/components/home/ProductsSection";
+import WhyChooseUs from "@/components/home/WhyChooseUs";
+import ProcessSection from "@/components/home/ProcessSection";
+import FAQSection from "@/components/home/FAQSection";
 import Footer from "@/components/Footer";
-import PromotionModal from "@/components/PromotionModal";
+import PromotionModal from "@/components/home/PromotionModal";
 
 export const metadata: Metadata = homeMetadata;
 
