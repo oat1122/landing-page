@@ -10,6 +10,7 @@ import {
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/home/HeroSection";
 import ProductsSection from "@/components/home/ProductsSection";
+import FabricGuideSection from "@/components/home/FabricGuideSection";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import ProcessSection from "@/components/home/ProcessSection";
 import FAQSection from "@/components/home/FAQSection";
@@ -36,6 +37,7 @@ export default function HomePage() {
         <main>
           <HeroSection />
           <ProductsSection />
+          <FabricGuideSection />
           <WhyChooseUs />
           <ProcessSection />
           <FAQSection />

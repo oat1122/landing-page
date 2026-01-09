@@ -128,12 +128,7 @@ export default function ProductsSection() {
                   quality={85}
                   placeholder="blur"
                   blurDataURL={product.blurDataURL}
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110 parallax-image"
-                  style={{
-                    transform: `translateY(${-scrollY}px) scale(${
-                      1 + scrollY * 0.002
-                    })`,
-                  }}
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
                 {/* Hover overlay gradient */}
                 <div className="product-image-overlay" />
