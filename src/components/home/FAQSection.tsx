@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, MessageCircleQuestion } from "lucide-react";
-import { FAQ_DATA } from "@/config/content/faq.data";
+import { FAQ_DATA } from "@/config/content/home";
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);

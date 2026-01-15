@@ -6,7 +6,7 @@ import type {
   WithContext,
 } from "schema-dts";
 import { SITE_NAME, SITE_URL } from "./home.metadata";
-import { generateFAQSchema } from "@/config/content/faq.data";
+import { generateFAQSchema } from "@/config/content/home/faq.data";
 
 export const organizationSchema: WithContext<Organization> = {
   "@context": "https://schema.org",
