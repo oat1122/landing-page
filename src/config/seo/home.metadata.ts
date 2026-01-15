@@ -3,6 +3,42 @@ import type { Metadata } from "next";
 const SITE_URL = "https://xn--o3c1bj3b4bj8cd.com";
 const SITE_NAME = "โรงงานผลิตเสื้อ | เสื้อยืด เสื้อโปโล ราคาโรงงาน";
 
+// ===== Keywords จัดหมวดหมู่ =====
+// แก้ไขได้ง่าย เพิ่ม/ลบ keywords ในหมวดที่เหมาะสม
+export const HOME_KEYWORDS = {
+  // สินค้าหลัก (จาก HeroSection, ProductsSection)
+  products: ["เสื้อยืด", "เสื้อโปโล", "ยูนิฟอร์มพนักงาน"],
+
+  // วัสดุผ้า (จาก FabricGuideSection)
+  fabrics: ["ผ้า Cotton 100%", "ผ้า TC", "ผ้า CVC"],
+
+  // บริการโรงงาน
+  factory: ["โรงงานผลิตเสื้อ", "รับผลิตเสื้อ", "ผลิตเสื้อตามออเดอร์"],
+
+  // ราคา
+  pricing: ["เสื้อราคาโรงงาน", "เสื้อยืดราคาถูก", "เสื้อโปโลราคาโรงงาน"],
+
+  // Long-tail Keywords (จาก FAQSection)
+  longTail: [
+    "สั่งเสื้อขั้นต่ำกี่ตัว",
+    "ผลิตเสื้อใช้เวลากี่วัน",
+    "บริการออกแบบเสื้อฟรี",
+  ],
+
+  // บริการ (จาก ProcessSection, WhyChooseUs)
+  services: [
+    "ออกแบบเสื้อ",
+    "สกรีนเสื้อ",
+    "ปักเสื้อ",
+    "พิมพ์ DTG",
+    "ผลิตเสื้อด่วน",
+    "QC ตรวจสอบคุณภาพ",
+  ],
+} as const;
+
+// รวมเป็น array สำหรับ metadata
+export const homeKeywords = Object.values(HOME_KEYWORDS).flat();
+
 export const homeMetadata: Metadata = {
   title: {
     default: SITE_NAME,
@@ -10,16 +46,7 @@ export const homeMetadata: Metadata = {
   },
   description:
     "โรงงานผลิตเสื้อคุณภาพ เสื้อยืด เสื้อโปโล ราคาถูกกว่าเพราะผลิตเอง รับผลิตเสื้อตามออเดอร์ ส่งตรงจากโรงงาน",
-  keywords: [
-    "เสื้อยืด",
-    "เสื้อโปโล",
-    "โรงงานผลิตเสื้อ",
-    "เสื้อราคาโรงงาน",
-    "รับผลิตเสื้อ",
-    "เสื้อยืดราคาถูก",
-    "เสื้อโปโลราคาโรงงาน",
-    "ผลิตเสื้อตามออเดอร์",
-  ],
+  keywords: homeKeywords,
   authors: [{ name: "โรงงานผลิตเสื้อ" }],
   creator: "โรงงานผลิตเสื้อ",
   metadataBase: new URL(SITE_URL),

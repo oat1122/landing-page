@@ -6,6 +6,7 @@ import type {
   WithContext,
 } from "schema-dts";
 import { SITE_NAME, SITE_URL } from "./home.metadata";
+import { generateFAQSchema } from "@/config/content/faq.data";
 
 export const organizationSchema: WithContext<Organization> = {
   "@context": "https://schema.org",
@@ -67,51 +68,11 @@ export const localBusinessSchema: WithContext<LocalBusiness> = {
   priceRange: "$$",
 };
 
+// FAQ Schema - ใช้ข้อมูลจาก faq.data.ts (Single Source of Truth)
 export const faqSchema: WithContext<FAQPage> = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "สั่งเสื้อขั้นต่ำกี่ตัว?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "โรงงานของเรารับผลิตเสื้อขั้นต่ำเริ่มต้นเพียง 30 ตัวต่อแบบเท่านั้น เหมาะสำหรับทั้งธุรกิจ SME, ทีมงานขนาดเล็ก ไปจนถึงองค์กรใหญ่ที่ต้องการสั่งผลิตจำนวนมาก (Mass Production) ในราคาโรงงาน",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "ผลิตเสื้อใช้เวลากี่วัน?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "ระยะเวลาการผลิตปกติอยู่ที่ 14-21 วัน หลังจากสรุปแบบและยืนยันมัดจำ หากต้องการงานด่วนพิเศษ (Rush Order) สามารถแจ้งฝ่ายขายเพื่อตรวจสอบคิวการผลิตและเร่งดำเนินการให้ได้",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "มีบริการออกแบบไหม?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "มีบริการออกแบบฟรี! เมื่อสั่งผลิตเสื้อกับเรา เรามีทีมกราฟิกมืออาชีพช่วยวางแบบ จัดวางโลโก้ และปรับแก้จนกว่าคุณจะพอใจ",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "รับประกันคุณภาพไหม?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "เรารับประกันคุณภาพสินค้า 100% มีขั้นตอน QC ตรวจสอบเสื้อทุกตัวก่อนจัดส่ง หากพบสินค้ามีตำหนิจากการผลิต เรายินดีผลิตใหม่ให้ฟรี",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "จัดส่งทั่วประเทศไหม?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "เรามีบริการจัดส่งฟรีทั่วประเทศ (ตามเงื่อนไขยอดสั่งซื้อ) ผ่านขนส่งเอกชนมาตรฐาน ไม่ว่าคุณจะอยู่จังหวัดไหน",
-      },
-    },
-  ],
+  mainEntity: generateFAQSchema(),
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

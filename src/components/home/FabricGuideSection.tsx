@@ -133,13 +133,13 @@ export default function FabricGuideSection() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full bg-amber-100 text-amber-700 text-sm font-semibold mb-4">
-            รู้จักเนื้อผ้า
+            คู่มือเลือกผ้า
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            เลือกเนื้อผ้าให้เหมาะกับงาน
+            เปรียบเทียบผ้า Cotton, TC, CVC สำหรับเสื้อยืดและเสื้อโปโล
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            เข้าใจความแตกต่างของเนื้อผ้า 3 ชนิดยอดนิยม
+            เข้าใจความแตกต่างของเนื้อผ้า 3 ชนิดยอดนิยมจากโรงงานผลิตเสื้อ
             เพื่อเลือกสรรวัสดุที่ตอบโจทย์การใช้งานของคุณมากที่สุด
           </p>
         </div>
