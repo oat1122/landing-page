@@ -4,6 +4,3 @@ Allow: /
 
 # Host
 Host: https://xn--o3c1bj3b4bj8cd.com
-
-# Sitemaps
-Sitemap: https://xn--o3c1bj3b4bj8cd.com/sitemap.xml

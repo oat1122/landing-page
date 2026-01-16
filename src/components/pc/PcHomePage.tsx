@@ -1,25 +1,21 @@
-import { Metadata } from "next";
 import {
-  homeMetadata,
   organizationSchema,
   websiteSchema,
   localBusinessSchema,
   faqSchema,
   JsonLd,
 } from "@/config/seo";
-import Navbar from "@/components/Navbar";
-import HeroSection from "@/components/home/HeroSection";
-import ProductsSection from "@/components/home/ProductsSection";
-import FabricGuideSection from "@/components/home/FabricGuideSection";
-import WhyChooseUs from "@/components/home/WhyChooseUs";
-import ProcessSection from "@/components/home/ProcessSection";
-import FAQSection from "@/components/home/FAQSection";
-import Footer from "@/components/Footer";
-import PromotionModal from "@/components/home/PromotionModal";
+import Navbar from "@/components/pc/Navbar";
+import HeroSection from "@/components/pc/home/HeroSection";
+import ProductsSection from "@/components/pc/home/ProductsSection";
+import FabricGuideSection from "@/components/pc/home/FabricGuideSection";
+import WhyChooseUs from "@/components/pc/home/WhyChooseUs";
+import ProcessSection from "@/components/pc/home/ProcessSection";
+import FAQSection from "@/components/pc/home/FAQSection";
+import Footer from "@/components/pc/Footer";
+import PromotionModal from "@/components/pc/home/PromotionModal";
 
-export const metadata: Metadata = homeMetadata;
-
-export default function HomePage() {
+export default function PcHomePage() {
   return (
     <>
       {/* JSON-LD Structured Data */}
