@@ -6,6 +6,7 @@ interface ButtonProps {
   href?: string;
   onClick?: () => void;
   variant?: "primary" | "secondary" | "outline" | "ghost";
+  size?: "sm" | "md" | "lg";
   className?: string;
   fullWidth?: boolean;
 }
@@ -15,11 +16,18 @@ export default function Button({
   href,
   onClick,
   variant = "primary",
+  size = "md",
   className = "",
   fullWidth = false,
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-200 active:scale-95";
+    "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 active:scale-95";
+
+  const sizes = {
+    sm: "px-4 py-2 text-sm",
+    md: "px-6 py-3 text-base",
+    lg: "px-8 py-4 text-lg",
+  };
 
   const variants = {
     primary:
@@ -32,7 +40,7 @@ export default function Button({
   };
 
   const widthClass = fullWidth ? "w-full" : "";
-  const combinedClasses = `${baseStyles} ${variants[variant]} ${widthClass} ${className}`;
+  const combinedClasses = `${baseStyles} ${sizes[size]} ${variants[variant]} ${widthClass} ${className}`;
 
   if (href) {
     return (

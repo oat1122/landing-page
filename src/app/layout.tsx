@@ -1,16 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Kanit, Prompt } from "next/font/google"; // Import Kanit and Prompt
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Configure Kanit for Headings
+const kanit = Kanit({
+  weight: ["400", "600", "700"],
+  subsets: ["latin", "thai"], // Added 'thai' subset
+  variable: "--font-kanit",
+  display: "swap", // Recommended for performance
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Configure Prompt for Body
+const prompt = Prompt({
+  weight: ["300", "400", "500"],
+  subsets: ["latin", "thai"], // Added 'thai' subset
+  variable: "--font-prompt",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -26,9 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="th">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${kanit.variable} ${prompt.variable} antialiased`}>
         {children}
       </body>
       {process.env.NEXT_PUBLIC_GA_ID && (

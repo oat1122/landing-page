@@ -14,6 +14,9 @@ const AboutHeroSection = () => {
         />
         {/* Overlay for readability */}
         <div className="absolute inset-0 bg-black/60" />
+
+        {/* White Gradient for Navbar Visibility */}
+        <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-white via-white/40 to-transparent opacity-90" />
       </div>
 
       {/* Content */}
