@@ -16,7 +16,7 @@ const blurDataURLs = {
 const products = [
   {
     title: "เสื้อยืด",
-    image: "/home/ProductsSection/เสื้อยืด.png",
+    image: "/home/ProductsSection/tshirt.png",
     blurDataURL: blurDataURLs.tshirt,
     alt: "เสื้อยืด Cotton 100% คุณภาพสูง รับผลิตตามสั่ง - โรงงานผลิตเสื้อ",
     description:
@@ -26,7 +26,7 @@ const products = [
   },
   {
     title: "เสื้อโปโล",
-    image: "/home/ProductsSection/Polo มีกระเป๋า.png",
+    image: "/home/ProductsSection/polo-with-pocket.png",
     blurDataURL: blurDataURLs.polo,
     alt: "เสื้อโปโลมีกระเป๋า ผ้า TC พรีเมียม พร้อมปักโลโก้ - โรงงานผลิตเสื้อโปโล",
     description:
@@ -36,7 +36,7 @@ const products = [
   },
   {
     title: "ยูนิฟอร์มพนักงาน",
-    image: "/home/ProductsSection/ยูนิฟอร์มพนักงาน.png",
+    image: "/home/ProductsSection/employee-uniform.png",
     blurDataURL: blurDataURLs.uniform,
     alt: "ยูนิฟอร์มพนักงาน ชุดทำงานบริษัท ออกแบบเฉพาะองค์กร - รับผลิตยูนิฟอร์ม",
     description:
@@ -119,7 +119,7 @@ export default function ProductsSection() {
               }`}
             >
               {/* Product Image Container - 5:4 aspect ratio */}
-              <div className="relative aspect-[5/4] overflow-hidden">
+              <div className="relative aspect-5/4 overflow-hidden">
                 <Image
                   src={product.image}
                   alt={product.alt}

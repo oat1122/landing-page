@@ -18,7 +18,7 @@ const blurDataURLs = {
 const products = [
   {
     title: "เสื้อยืด",
-    image: "/home/ProductsSection/เสื้อยืด.png",
+    image: "/home/ProductsSection/tshirt.png",
     blurDataURL: blurDataURLs.tshirt,
     alt: "เสื้อยืด Cotton 100% คุณภาพสูง รับผลิตตามสั่ง - โรงงานผลิตเสื้อ",
     description: "รับผลิตเสื้อยืดคุณภาพสูง เนื้อผ้า Cotton 100% นุ่มสบาย",
@@ -27,7 +27,7 @@ const products = [
   },
   {
     title: "เสื้อโปโล",
-    image: "/home/ProductsSection/Polo มีกระเป๋า.png",
+    image: "/home/ProductsSection/polo-with-pocket.png",
     blurDataURL: blurDataURLs.polo,
     alt: "เสื้อโปโลมีกระเป๋า ผ้า TC พรีเมียม พร้อมปักโลโก้ - โรงงานผลิตเสื้อโปโล",
     description: "โรงงานผลิตเสื้อโปโล เกรดพรีเมียม ผ้า TC, CVC, Pique",
@@ -36,7 +36,7 @@ const products = [
   },
   {
     title: "ยูนิฟอร์ม",
-    image: "/home/ProductsSection/ยูนิฟอร์มพนักงาน.png",
+    image: "/home/ProductsSection/employee-uniform.png",
     blurDataURL: blurDataURLs.uniform,
     alt: "ยูนิฟอร์มพนักงาน ชุดทำงานบริษัท ออกแบบเฉพาะองค์กร - รับผลิตยูนิฟอร์ม",
     description: "รับผลิตยูนิฟอร์มพนักงาน ชุดทำงาน ชุดพนักงานบริษัท",
