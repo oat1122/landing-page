@@ -5,7 +5,15 @@ module.exports = {
   generateIndexSitemap: false,
   changefreq: "weekly",
   priority: 0.7,
-  exclude: ["/api/*"],
+  exclude: [
+    "/login",
+    "/admin/*",
+    "/dashboard/*",
+    "/reports/*",
+    "/products/*",
+    "/blogs/*",
+    "/api/*",
+  ],
   robotsTxtOptions: {
     policies: [
       {
