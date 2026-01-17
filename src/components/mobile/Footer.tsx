@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Facebook, Instagram, Phone, Mail, MapPin } from "lucide-react";
-import Logo from "@/components/shared/Logo";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -9,9 +8,6 @@ export default function Footer() {
     <footer className="bg-gray-900 text-gray-300 pt-16 pb-8 rounded-t-3xl mt-8">
       <div className="px-6">
         <div className="mb-8">
-          <div className="mb-4">
-            <Logo className="text-white [&>span]:text-white" />
-          </div>
           <p className="text-gray-400 text-sm leading-relaxed">
             โรงงานผลิตเสื้อคุณภาพ ราคาถูกกว่าเพราะเราผลิตเอง
             รับผลิตเสื้อตามออเดอร์ ส่งตรงจากโรงงาน

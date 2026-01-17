@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   title: "โรงงานผลิตเสื้อ | เสื้อยืด เสื้อโปโล ราคาโรงงาน",
   description:
     "โรงงานผลิตเสื้อคุณภาพ เสื้อยืด เสื้อโปโล ราคาถูกกว่าเพราะผลิตเอง",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({
