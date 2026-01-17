@@ -1,6 +1,7 @@
 "use client";
 
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 import {
   LayoutDashboard,
   Users,
@@ -11,6 +12,7 @@ import {
   ShoppingCart,
   FileText,
   Bell,
+  Image,
 } from "lucide-react";
 
 interface DashboardContentProps {
@@ -172,7 +174,7 @@ export default function DashboardContent({ user }: DashboardContentProps) {
             <h2 className="text-xl font-bold text-white mb-4">
               การดำเนินการด่วน
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
               <button className="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors text-center group">
                 <ShoppingCart className="w-8 h-8 text-purple-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-white text-sm">สร้างคำสั่งซื้อ</span>
@@ -189,6 +191,13 @@ export default function DashboardContent({ user }: DashboardContentProps) {
                 <FileText className="w-8 h-8 text-amber-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-white text-sm">ดูรายงาน</span>
               </button>
+              <Link
+                href="/images"
+                className="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors text-center group"
+              >
+                <Image className="w-8 h-8 text-green-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+                <span className="text-white text-sm">จัดการรูปภาพ</span>
+              </Link>
             </div>
           </div>
 

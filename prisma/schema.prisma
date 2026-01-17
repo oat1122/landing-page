@@ -22,6 +22,7 @@ model User {
 
   accounts Account[]
   sessions Session[]
+  images   Image[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -68,4 +69,42 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verificationtoken")
+}
+
+// Model สำหรับ Image Upload พร้อม SEO
+model Image {
+  id          String   @id @default(uuid())
+  
+  // File Information
+  filename    String               // ชื่อไฟล์ original
+  filepath    String   @unique     // path เก็บไฟล์
+  url         String               // URL สำหรับ access รูป
+  mimeType    String               // image/jpeg, image/png, image/webp
+  size        Int                  // ขนาดไฟล์ (bytes)
+  width       Int?                 // ความกว้าง (pixels)
+  height      Int?                 // ความสูง (pixels)
+  
+  // SEO Fields
+  alt         String               // Alt text สำหรับ accessibility & SEO
+  title       String?              // Title attribute
+  caption     String?  @db.Text    // คำอธิบายรูปภาพ
+  description String?  @db.Text    // รายละเอียดเพิ่มเติม
+  
+  // Organization
+  category    String?              // หมวดหมู่ เช่น "product", "blog", "banner"
+  tags        String?  @db.Text    // Tags คั่นด้วย comma
+  
+  // Usage Tracking
+  usedIn      String?  @db.Text    // Where this image is used (JSON)
+  
+  // Metadata
+  uploadedBy  String?              // User ID ที่อัพโหลด
+  user        User?    @relation(fields: [uploadedBy], references: [id], onDelete: SetNull)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([category])
+  @@index([uploadedBy])
+  @@map("image")
 }
