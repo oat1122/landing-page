@@ -18,28 +18,24 @@ export interface UsePromotionReturn {
   closePromo: () => void;
 }
 
+function calculateTimeLeft(): TimeLeft {
+  const difference = PROMO_END_DATE.getTime() - Date.now();
+
+  if (difference > 0) {
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  }
+  return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+}
+
 export function usePromotion(): UsePromotionReturn {
   const [isOpen, setIsOpen] = useState(false);
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  const calculateTimeLeft = useCallback(() => {
-    const difference = PROMO_END_DATE.getTime() - Date.now();
-
-    if (difference > 0) {
-      return {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      };
-    }
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  }, []);
+  // Initialize with calculated value to avoid setState in effect
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft);
 
   useEffect(() => {
     // Check if user has already seen the promo
@@ -54,13 +50,13 @@ export function usePromotion(): UsePromotionReturn {
   useEffect(() => {
     if (!isOpen) return;
 
-    setTimeLeft(calculateTimeLeft());
+    // Only use setInterval for updates, initial state already set
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isOpen, calculateTimeLeft]);
+  }, [isOpen]);
 
   const closePromo = useCallback(() => {
     setIsOpen(false);

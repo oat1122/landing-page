@@ -1,5 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { Upload, Images } from "lucide-react";
+import BackButton from "@/components/shared/BackButton";
 import ImageUploadForm from "@/components/admin/ImageUploadForm";
 import ImageGallery from "@/components/admin/ImageGallery";
 
@@ -18,19 +20,15 @@ export default async function ImagesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">📸 จัดการรูปภาพ</h1>
-          <p className="text-gray-600 mt-2">
-            อัพโหลดและจัดการรูปภาพสำหรับใช้งานใน Product และ Blog
-          </p>
-        </div>
+        {/* Back Button */}
+        <BackButton className="mb-6" label="ย้อนกลับ" />
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Upload Section */}
           <div className="bg-white rounded-2xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <span className="text-2xl">⬆️</span> อัพโหลดรูปภาพใหม่
+              <Upload className="w-6 h-6 text-blue-600" />
+              อัพโหลดรูปภาพใหม่
             </h2>
             <ImageUploadForm />
           </div>
@@ -38,7 +36,8 @@ export default async function ImagesPage() {
           {/* Gallery Section */}
           <div className="bg-white rounded-2xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <span className="text-2xl">🖼️</span> รูปภาพทั้งหมด
+              <Images className="w-6 h-6 text-green-600" />
+              รูปภาพทั้งหมด
             </h2>
             <ImageGallery />
           </div>

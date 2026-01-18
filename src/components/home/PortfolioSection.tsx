@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import Lightbox from "@/components/shared/Lightbox";
 
 // Portfolio items data - สามารถเปลี่ยนรูปและข้อมูลได้ภายหลัง
 const portfolioItems = [
@@ -73,13 +74,13 @@ export default function PortfolioSection() {
 
   const goToPrevious = () => {
     setCurrentImageIndex((prev) =>
-      prev === 0 ? filteredItems.length - 1 : prev - 1
+      prev === 0 ? filteredItems.length - 1 : prev - 1,
     );
   };
 
   const goToNext = () => {
     setCurrentImageIndex((prev) =>
-      prev === filteredItems.length - 1 ? 0 : prev + 1
+      prev === filteredItems.length - 1 ? 0 : prev + 1,
     );
   };
 
@@ -144,8 +145,8 @@ export default function PortfolioSection() {
                       item.category === "สกรีน"
                         ? "bg-blue-500"
                         : item.category === "ปัก"
-                        ? "bg-purple-500"
-                        : "bg-orange-500"
+                          ? "bg-purple-500"
+                          : "bg-orange-500"
                     }`}
                   >
                     {item.category}
@@ -181,68 +182,19 @@ export default function PortfolioSection() {
       </div>
 
       {/* Lightbox Modal */}
-      {lightboxOpen && filteredItems[currentImageIndex] && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-          onClick={closeLightbox}
-        >
-          {/* Close Button */}
-          <button
-            onClick={closeLightbox}
-            className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors z-10"
-          >
-            <X className="w-8 h-8" />
-          </button>
-
-          {/* Navigation Buttons */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              goToPrevious();
-            }}
-            className="absolute left-4 text-white/80 hover:text-white transition-colors z-10"
-          >
-            <ChevronLeft className="w-10 h-10" />
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              goToNext();
-            }}
-            className="absolute right-4 text-white/80 hover:text-white transition-colors z-10"
-          >
-            <ChevronRight className="w-10 h-10" />
-          </button>
-
-          {/* Image */}
-          <div
-            className="relative max-w-4xl max-h-[80vh] w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={filteredItems[currentImageIndex].image}
-              alt={filteredItems[currentImageIndex].title}
-              width={1200}
-              height={800}
-              className="object-contain w-full h-full rounded-lg"
-            />
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-lg">
-              <h3 className="text-white text-xl font-bold">
-                {filteredItems[currentImageIndex].title}
-              </h3>
-              <p className="text-white/80 mt-1">
-                {filteredItems[currentImageIndex].description}
-              </p>
-            </div>
-          </div>
-
-          {/* Image Counter */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-sm">
-            {currentImageIndex + 1} / {filteredItems.length}
-          </div>
-        </div>
-      )}
+      <Lightbox
+        items={filteredItems.map((item) => ({
+          src: item.image,
+          alt: item.title,
+          title: item.title,
+          description: item.description,
+        }))}
+        currentIndex={currentImageIndex}
+        isOpen={lightboxOpen}
+        onClose={closeLightbox}
+        onPrevious={goToPrevious}
+        onNext={goToNext}
+      />
     </section>
   );
 }
