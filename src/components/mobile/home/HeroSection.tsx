@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ArrowRight, Sparkles, Truck, Shield } from "lucide-react";
 import { HERO_CONTENT, HERO_FEATURES } from "@/config/content/home";
 import Button from "@/components/shared/Button";

@@ -195,7 +195,11 @@ export default function DashboardContent({ user }: DashboardContentProps) {
                 href="/images"
                 className="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors text-center group"
               >
-                <Image className="w-8 h-8 text-green-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+                {/* eslint-disable-next-line jsx-a11y/alt-text */}
+                <Image
+                  className="w-8 h-8 text-green-400 mx-auto mb-2 group-hover:scale-110 transition-transform"
+                  aria-hidden="true"
+                />
                 <span className="text-white text-sm">จัดการรูปภาพ</span>
               </Link>
             </div>

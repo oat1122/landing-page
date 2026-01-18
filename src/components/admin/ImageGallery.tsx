@@ -10,6 +10,7 @@ import {
   Tag,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import { useImageGallery, ImageData } from "@/hooks/useImageGallery";
 import { LoadingContainer } from "@/components/shared/LoadingSpinner";
 import EmptyState from "@/components/shared/EmptyState";
@@ -211,13 +212,14 @@ export default function ImageGallery({
                 ${selectedId === image.id ? "ring-2 ring-blue-500" : ""}
               `}
             >
-              {/* Image */}
               <div className="aspect-square bg-gray-100 relative">
-                <img
+                <Image
                   src={image.url}
                   alt={image.alt}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  unoptimized
                 />
 
                 {/* Overlay Actions */}

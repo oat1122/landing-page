@@ -48,7 +48,6 @@ const products = [
 
 export default function ProductsSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
   // Parallax scroll effect
@@ -61,9 +60,8 @@ export default function ProductsSection() {
 
         // Calculate parallax offset based on section position
         if (sectionTop < windowHeight && sectionTop > -rect.height) {
-          const scrollProgress =
-            (windowHeight - sectionTop) / (windowHeight + rect.height);
-          setScrollY(scrollProgress * 30); // Max 30px parallax
+          // Parallax calculation available if needed
+          // const scrollProgress = (windowHeight - sectionTop) / (windowHeight + rect.height);
         }
       }
     };
@@ -81,7 +79,7 @@ export default function ProductsSection() {
           setIsVisible(true);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     if (sectionRef.current) {

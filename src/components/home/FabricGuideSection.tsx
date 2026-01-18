@@ -114,7 +114,7 @@ export default function FabricGuideSection() {
           setIsVisible(true);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     if (sectionRef.current) {
@@ -174,7 +174,7 @@ export default function FabricGuideSection() {
                   {fabric.name}
                 </h3>
                 <p className="text-sm text-gray-500 mb-4 italic">
-                  "{fabric.tagline}"
+                  &ldquo;{fabric.tagline}&rdquo;
                 </p>
 
                 {/* Composition Badge */}

@@ -130,6 +130,7 @@ export default function ImageUploadForm({
                     `}
                   >
                     {fileData.preview ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={fileData.preview}
                         alt={fileData.alt || "Preview"}

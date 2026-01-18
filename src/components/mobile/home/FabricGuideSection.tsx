@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Check, X, Star } from "lucide-react";
+import { Check, Star } from "lucide-react";
 import SectionHeading from "@/components/shared/SectionHeading";
 
 // Blur placeholder base64
