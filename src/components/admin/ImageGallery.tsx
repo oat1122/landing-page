@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Copy,
   Check,
@@ -17,7 +17,11 @@ import {
   Plus,
 } from "lucide-react";
 import Image from "next/image";
-import { useImageGallery, ImageData } from "@/hooks/useImageGallery";
+import { useInView } from "react-intersection-observer";
+import {
+  useInfiniteImageGallery,
+  ImageData,
+} from "@/hooks/useInfiniteImageGallery";
 import { LoadingContainer } from "@/components/shared/LoadingSpinner";
 import EmptyState from "@/components/shared/EmptyState";
 import EditImageModal from "@/components/admin/EditImageModal";
@@ -55,7 +59,7 @@ export default function ImageGallery({
     searchDateTo,
     showFilters,
     hasActiveFilters,
-    images,
+    totalCount,
     setFilter,
     setViewMode,
     setSearchName,
@@ -70,11 +74,27 @@ export default function ImageGallery({
     refetch,
     formatSize,
     formatDate,
-  } = useImageGallery({
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteImageGallery({
     onSelect,
     selectable,
     refreshKey: refreshKey + uploadRefreshKey,
   });
+
+  // Intersection observer for infinite scroll
+  const { ref: observerRef, inView } = useInView({
+    threshold: 0,
+    rootMargin: "100px",
+  });
+
+  // Trigger fetchNextPage when observer is in view
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleEdit = (image: ImageData) => {
     setEditingImage(image);
@@ -110,7 +130,7 @@ export default function ImageGallery({
       {/* Header with Upload Button */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">
-          รูปภาพทั้งหมด ({images.length})
+          รูปภาพทั้งหมด ({totalCount})
         </h2>
         <button
           onClick={() => setShowUploadModal(true)}
@@ -260,7 +280,7 @@ export default function ImageGallery({
       {/* Results Count */}
       {hasActiveFilters && (
         <p className="text-sm text-gray-500">
-          พบ {filteredImages.length} รูป จากทั้งหมด {images.length} รูป
+          พบ {filteredImages.length} รูป จากทั้งหมด {totalCount} รูป
         </p>
       )}
 
@@ -513,6 +533,24 @@ export default function ImageGallery({
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Infinite Scroll Observer & Indicators */}
+      {filteredImages.length > 0 && (
+        <div
+          ref={observerRef}
+          className="h-16 flex items-center justify-center"
+        >
+          {isFetchingNextPage && (
+            <div className="flex items-center gap-2 text-gray-500">
+              <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+              <span className="text-sm">กำลังโหลดเพิ่ม...</span>
+            </div>
+          )}
+          {!hasNextPage && !isFetchingNextPage && (
+            <span className="text-sm text-gray-400">ไม่มีรูปภาพเพิ่มเติม</span>
+          )}
         </div>
       )}
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Kanit, Prompt } from "next/font/google"; // Import Kanit and Prompt
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { QueryProvider } from "@/providers/query-provider";
 import "./globals.css";
 
 // Configure Kanit for Headings
@@ -36,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="th">
       <body className={`${kanit.variable} ${prompt.variable} antialiased`}>
-        {children}
+        <QueryProvider>{children}</QueryProvider>
       </body>
       {process.env.NEXT_PUBLIC_GA_ID && (
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
