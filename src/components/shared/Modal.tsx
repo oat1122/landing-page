@@ -70,11 +70,11 @@ export default function Modal({
 
       {/* Modal Container */}
       <div
-        className={`relative w-full ${sizes[size]} bg-white rounded-2xl shadow-2xl overflow-hidden ${className}`}
+        className={`relative w-full ${sizes[size]} bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col ${className}`}
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-4 border-b border-gray-100">
+          <div className="flex items-center justify-between p-4 border-b border-gray-100 shrink-0">
             {title && (
               <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
             )}
@@ -89,8 +89,8 @@ export default function Modal({
           </div>
         )}
 
-        {/* Content */}
-        <div className="p-4">{children}</div>
+        {/* Content - Scrollable */}
+        <div className="p-4 overflow-y-auto">{children}</div>
       </div>
     </div>
   );

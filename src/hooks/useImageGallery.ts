@@ -8,6 +8,7 @@ export interface ImageData {
   url: string;
   alt: string;
   title: string | null;
+  caption: string | null;
   category: string | null;
   tags: string | null;
   width: number | null;
@@ -34,6 +35,7 @@ export interface UseImageGalleryReturn {
   copiedId: string | null;
   selectedId: string | null;
   filter: string;
+  viewMode: "grid" | "list";
 
   // Search states
   searchName: string;
@@ -45,6 +47,7 @@ export interface UseImageGalleryReturn {
 
   // Actions
   setFilter: (filter: string) => void;
+  setViewMode: (mode: "grid" | "list") => void;
   setSearchName: (name: string) => void;
   setSearchTag: (tag: string) => void;
   setSearchDateFrom: (date: string) => void;
@@ -72,6 +75,7 @@ export function useImageGallery({
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   // Search states
   const [searchName, setSearchName] = useState("");
@@ -241,6 +245,7 @@ export function useImageGallery({
     copiedId,
     selectedId,
     filter,
+    viewMode,
 
     // Search states
     searchName,
@@ -252,6 +257,7 @@ export function useImageGallery({
 
     // Actions
     setFilter,
+    setViewMode,
     setSearchName,
     setSearchTag,
     setSearchDateFrom,
