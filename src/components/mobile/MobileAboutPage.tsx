@@ -1,11 +1,11 @@
 import React from "react";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
-import AboutHeroSection from "./AboutHeroSection";
-import StorySection from "./StorySection";
-import MissionVisionSection from "./MissionVisionSection";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import AboutHeroSection from "./about/AboutHeroSection";
+import StorySection from "./about/StorySection";
+import MissionVisionSection from "./about/MissionVisionSection";
 
-import CTASection from "./CTASection";
+import CTASection from "./about/CTASection";
 
 const MobileAboutPage = () => {
   return (

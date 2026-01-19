@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { Metadata } from "next";
 import PcAboutPage from "@/components/pc/about/PcAboutPage";
-import MobileAboutPage from "@/components/mobile/about/MobileAboutPage";
+import MobileAboutPage from "@/components/mobile/MobileAboutPage";
 
 export const metadata: Metadata = {
   title: "เกี่ยวกับเรา | TNP T-Shirt Factory",

@@ -8,6 +8,9 @@ export default function Footer() {
     <footer className="bg-gray-900 text-gray-300 pt-16 pb-8 rounded-t-3xl mt-8">
       <div className="px-6">
         <div className="mb-8">
+          <h3 className="text-white font-semibold mb-2">
+            บริษัท ธน พลัส 153 จำกัด
+          </h3>
           <p className="text-gray-400 text-sm leading-relaxed">
             โรงงานผลิตเสื้อคุณภาพ ราคาถูกกว่าเพราะเราผลิตเอง
             รับผลิตเสื้อตามออเดอร์ ส่งตรงจากโรงงาน
@@ -18,18 +21,20 @@ export default function Footer() {
         <div className="space-y-4 mb-10">
           <div className="flex items-start gap-3">
             <MapPin className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
-            <span className="text-sm">123 ถนนสุขุมวิท กรุงเทพฯ 10110</span>
+            <span className="text-sm">
+              503 ถ. สุโขทัย แขวงสวนจิตรลดา เขตดุสิต กรุงเทพมหานคร 10300
+            </span>
           </div>
           <div className="flex items-center gap-3">
             <Phone className="w-5 h-5 text-indigo-400 shrink-0" />
-            <a href="tel:0812345678" className="text-sm">
-              081-234-5678
+            <a href="tel:+6662497795" className="text-sm">
+              062-497-7952
             </a>
           </div>
           <div className="flex items-center gap-3">
             <Mail className="w-5 h-5 text-indigo-400 shrink-0" />
-            <a href="mailto:info@example.com" className="text-sm">
-              info@example.com
+            <a href="mailto:monaliza11867@gmail.com" className="text-sm">
+              monaliza11867@gmail.com
             </a>
           </div>
         </div>
