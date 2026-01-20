@@ -12,7 +12,7 @@ import {
   ChevronUp,
   Tag as TagIcon,
 } from "lucide-react";
-import { useFileUpload, UploadedImage } from "@/hooks/useFileUpload";
+import { useFileUpload, UploadedImage } from "@/hooks/admin/useFileUpload";
 
 interface ImageUploadFormProps {
   onUploadSuccess?: (images: UploadedImage[]) => void;

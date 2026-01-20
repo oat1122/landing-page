@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { Metadata } from "next";
 import { contactMetadata } from "@/config/seo";
 import MobileContactPage from "@/components/mobile/MobileContactPage";
+import Pccontact from "@/components/pc/Pccontact";
 
 export const metadata: Metadata = contactMetadata;
 
@@ -16,5 +17,5 @@ export default async function ContactPage() {
   }
 
   // Return mobile version as fallback for now
-  return <MobileContactPage />;
+  return <Pccontact />;
 }

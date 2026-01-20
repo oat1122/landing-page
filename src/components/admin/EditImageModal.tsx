@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Loader2, AlertCircle, Check, X, Tag as TagIcon } from "lucide-react";
 import Image from "next/image";
 import Modal from "@/components/shared/Modal";
-import { ImageData } from "@/hooks/useImageGallery";
+import { ImageData } from "@/hooks/admin/useImageGallery";
 
 interface EditImageModalProps {
   isOpen: boolean;

@@ -1,7 +1,7 @@
 "use client";
 
 import { X, Gift, Clock, Percent } from "lucide-react";
-import { usePromotion } from "@/hooks/usePromotion";
+import { usePromotion } from "@/hooks/home/usePromotion";
 
 export default function PromotionModal() {
   const { isOpen, timeLeft, closePromo } = usePromotion();

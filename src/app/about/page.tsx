@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { Metadata } from "next";
-import PcAboutPage from "@/components/pc/about/PcAboutPage";
+import PcAboutPage from "@/components/pc/PcAboutPage";
 import MobileAboutPage from "@/components/mobile/MobileAboutPage";
 
 export const metadata: Metadata = {

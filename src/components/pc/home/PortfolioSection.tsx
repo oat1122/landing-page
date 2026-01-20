@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
-import { usePortfolio, PortfolioItem } from "@/hooks/usePortfolio";
+import { usePortfolio, PortfolioItem } from "@/hooks/home/usePortfolio";
 import Lightbox from "@/components/shared/Lightbox";
 
 // Portfolio items data - สามารถเปลี่ยนรูปและข้อมูลได้ภายหลัง

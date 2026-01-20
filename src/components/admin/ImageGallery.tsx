@@ -21,7 +21,7 @@ import { useInView } from "react-intersection-observer";
 import {
   useInfiniteImageGallery,
   ImageData,
-} from "@/hooks/useInfiniteImageGallery";
+} from "@/hooks/admin/useInfiniteImageGallery";
 import { LoadingContainer } from "@/components/shared/LoadingSpinner";
 import EmptyState from "@/components/shared/EmptyState";
 import EditImageModal from "@/components/admin/EditImageModal";

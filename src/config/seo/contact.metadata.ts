@@ -3,6 +3,36 @@ import type { Metadata } from "next";
 const SITE_URL = "https://xn--o3c1bj3b4bj8cd.com";
 const SITE_NAME = "โรงงานผลิตเสื้อ | เสื้อยืด เสื้อโปโล ราคาโรงงาน";
 
+// ===== ข้อมูลติดต่อ =====
+// ทีม SEO แก้ไขข้อมูลติดต่อได้ที่นี่
+export const CONTACT_INFO = {
+  company: {
+    name: "บริษัท ธน พลัส 153 จำกัด",
+  },
+  address: {
+    full: "503 ถ. สุโขทัย แขวงสวนจิตรลดา เขตดุสิต กรุงเทพมหานคร 10300",
+    multiline: "503 ถ. สุโขทัย แขวงสวนจิตรลดา\nเขตดุสิต กรุงเทพมหานคร 10300",
+  },
+  phone: {
+    display: "062-497-7952",
+    href: "tel:+66624977952",
+  },
+  email: {
+    display: "monaliza11867@gmail.com",
+    href: "mailto:monaliza11867@gmail.com",
+  },
+  businessHours: {
+    days: "จันทร์ - ศุกร์",
+    hours: "09:00 - 18:00 น.",
+  },
+  googleMaps: {
+    embedUrl:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3875.0808607817453!2d100.5242382751636!3d13.773997096779127!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e299e9b34e3e21%3A0xff3e2eda5f3165fc!2sThanaplus!5e0!3m2!1sth!2sth!4v1768820879116!5m2!1sth!2sth",
+    directionsUrl:
+      "https://maps.google.com/?q=503+สุโขทัย+สวนจิตรลดา+ดุสิต+กรุงเทพ+10300",
+  },
+} as const;
+
 // ===== Keywords จัดหมวดหมู่สำหรับหน้า Contact =====
 export const CONTACT_KEYWORDS = {
   // การติดต่อ

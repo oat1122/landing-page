@@ -2,7 +2,7 @@
 
 import { ChevronDown, MessageCircleQuestion } from "lucide-react";
 import { FAQ_DATA } from "@/config/content/home";
-import { useFAQ } from "@/hooks/useFAQ";
+import { useFAQ } from "@/hooks/home/useFAQ";
 import SectionHeading from "@/components/shared/SectionHeading";
 
 export default function FAQSection() {

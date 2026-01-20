@@ -3,7 +3,7 @@
 import { ChevronDown, MessageCircleQuestion } from "lucide-react";
 import { FAQ_DATA } from "@/config/content/home";
 import SectionHeading from "@/components/shared/SectionHeading";
-import { useFAQ } from "@/hooks/useFAQ";
+import { useFAQ } from "@/hooks/home/useFAQ";
 
 export default function FAQSection() {
   const { toggleFAQ, isOpen } = useFAQ(0);
