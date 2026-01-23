@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/query-keys";
+import { api } from "@/lib/api-client";
 
 export interface ProductCategory {
   id: string;
@@ -15,138 +17,116 @@ export interface ProductCategory {
   updatedAt: string;
 }
 
+interface CategoriesResponse {
+  categories: ProductCategory[];
+}
+
+interface CategoryResponse {
+  category: ProductCategory;
+}
+
+interface CreateCategoryInput {
+  name: string;
+  description?: string;
+  sortOrder?: number;
+}
+
+interface UpdateCategoryInput {
+  name: string;
+  description?: string;
+  sortOrder?: number;
+}
+
 export interface UseCategoriesReturn {
   categories: ProductCategory[];
   loading: boolean;
   error: string | null;
-  refetch: () => Promise<void>;
-  createCategory: (data: {
-    name: string;
-    description?: string;
-    sortOrder?: number;
-  }) => Promise<ProductCategory | null>;
+  refetch: () => void;
+  createCategory: (
+    data: CreateCategoryInput,
+  ) => Promise<ProductCategory | null>;
   updateCategory: (
     id: string,
-    data: { name: string; description?: string; sortOrder?: number },
+    data: UpdateCategoryInput,
   ) => Promise<ProductCategory | null>;
   deleteCategory: (id: string) => Promise<boolean>;
+  // Mutation states for UI feedback
+  isCreating: boolean;
+  isUpdating: boolean;
+  isDeleting: boolean;
 }
 
 export function useCategories(): UseCategoriesReturn {
-  const [categories, setCategories] = useState<ProductCategory[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const fetchCategories = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  // Query for fetching categories
+  const {
+    data,
+    isLoading,
+    error: queryError,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.categories.list(),
+    queryFn: () => api.get<CategoriesResponse>("/api/categories"),
+  });
 
-      const response = await fetch("/api/categories");
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch categories");
-      }
-
-      setCategories(data.categories);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to load categories",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
-
-  const createCategory = useCallback(
-    async (data: {
-      name: string;
-      description?: string;
-      sortOrder?: number;
-    }): Promise<ProductCategory | null> => {
-      try {
-        const response = await fetch("/api/categories", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.error || "Failed to create category");
-        }
-
-        // Refetch to get updated list
-        await fetchCategories();
-        return result.category;
-      } catch (err) {
-        throw err;
-      }
+  // Create mutation
+  const createMutation = useMutation({
+    mutationFn: (input: CreateCategoryInput) =>
+      api.post<CategoryResponse>("/api/categories", input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
     },
-    [fetchCategories],
-  );
+  });
 
-  const updateCategory = useCallback(
-    async (
-      id: string,
-      data: { name: string; description?: string; sortOrder?: number },
-    ): Promise<ProductCategory | null> => {
-      try {
-        const response = await fetch(`/api/categories/${id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.error || "Failed to update category");
-        }
-
-        await fetchCategories();
-        return result.category;
-      } catch (err) {
-        throw err;
-      }
+  // Update mutation
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateCategoryInput }) =>
+      api.put<CategoryResponse>(`/api/categories/${id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
     },
-    [fetchCategories],
-  );
+  });
 
-  const deleteCategory = useCallback(
-    async (id: string): Promise<boolean> => {
-      try {
-        const response = await fetch(`/api/categories/${id}`, {
-          method: "DELETE",
-        });
-
-        if (!response.ok) {
-          const result = await response.json();
-          throw new Error(result.error || "Failed to delete category");
-        }
-
-        await fetchCategories();
-        return true;
-      } catch (err) {
-        throw err;
-      }
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => api.delete(`/api/categories/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
     },
-    [fetchCategories],
-  );
+  });
+
+  // Wrapper functions to maintain API compatibility
+  const createCategory = async (
+    input: CreateCategoryInput,
+  ): Promise<ProductCategory | null> => {
+    const result = await createMutation.mutateAsync(input);
+    return result.category;
+  };
+
+  const updateCategory = async (
+    id: string,
+    data: UpdateCategoryInput,
+  ): Promise<ProductCategory | null> => {
+    const result = await updateMutation.mutateAsync({ id, data });
+    return result.category;
+  };
+
+  const deleteCategory = async (id: string): Promise<boolean> => {
+    await deleteMutation.mutateAsync(id);
+    return true;
+  };
 
   return {
-    categories,
-    loading,
-    error,
-    refetch: fetchCategories,
+    categories: data?.categories ?? [],
+    loading: isLoading,
+    error: queryError ? queryError.message : null,
+    refetch: () => refetch(),
     createCategory,
     updateCategory,
     deleteCategory,
+    isCreating: createMutation.isPending,
+    isUpdating: updateMutation.isPending,
+    isDeleting: deleteMutation.isPending,
   };
 }

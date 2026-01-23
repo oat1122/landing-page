@@ -12,6 +12,7 @@ import {
   ALLOWED_MIME_TYPES,
   MAX_FILE_SIZE,
 } from "@/lib/image-utils";
+import { imageUploadSchema } from "@/lib/validations/image";
 
 /**
  * GET /api/images - List all images with pagination and filters
@@ -109,19 +110,24 @@ export async function POST(request: NextRequest) {
     }
 
     // Get SEO fields from form data
-    const alt = formData.get("alt") as string;
-    const title = formData.get("title") as string | null;
-    const caption = formData.get("caption") as string | null;
-    const description = formData.get("description") as string | null;
-    const category = formData.get("category") as string | null;
-    const tags = formData.get("tags") as string | null;
+    const formFields = {
+      alt: formData.get("alt") as string,
+      title: formData.get("title") as string | null,
+      caption: formData.get("caption") as string | null,
+      description: formData.get("description") as string | null,
+      category: formData.get("category") as string | null,
+      tags: formData.get("tags") as string | null,
+    };
 
-    if (!alt || alt.trim() === "") {
-      return NextResponse.json(
-        { error: "Alt text is required for SEO" },
-        { status: 400 },
-      );
+    // Validate with Zod schema
+    const validationResult = imageUploadSchema.safeParse(formFields);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.issues[0];
+      return NextResponse.json({ error: firstError.message }, { status: 400 });
     }
+
+    const { alt, title, caption, description, category, tags } =
+      validationResult.data;
 
     // Process the image
     const arrayBuffer = await file.arrayBuffer();

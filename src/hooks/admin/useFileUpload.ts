@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import { imageUploadSchema } from "@/lib/validations/image";
 
 export interface UploadedImage {
   id: string;
@@ -288,11 +289,21 @@ export function useFileUpload({
         return;
       }
 
-      // Validate all files have alt text
-      const missingAlt = files.filter((f) => !f.alt.trim());
-      if (missingAlt.length > 0) {
-        setErrorMessage("กรุณากรอก Alt Text สำหรับทุกรูปภาพ");
-        return;
+      // Validate all files with Zod schema
+      for (const fileData of files) {
+        const validationResult = imageUploadSchema.safeParse({
+          alt: fileData.alt,
+          title: fileData.title || undefined,
+          caption: sharedCaption || undefined,
+          category: sharedCategory || undefined,
+          tags: sharedTags.length > 0 ? sharedTags.join(",") : undefined,
+        });
+
+        if (!validationResult.success) {
+          const firstError = validationResult.error.issues[0];
+          setErrorMessage(`${fileData.file.name}: ${firstError.message}`);
+          return;
+        }
       }
 
       setIsUploading(true);

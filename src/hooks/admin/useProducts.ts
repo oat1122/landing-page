@@ -1,6 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useMemo, useCallback } from "react";
+import { queryKeys, type ProductFilters } from "@/lib/query-keys";
+import { api } from "@/lib/api-client";
 
 export interface ProductImage {
   id: string;
@@ -49,12 +52,19 @@ export interface Product {
   updatedAt: string;
 }
 
-export interface ProductFilters {
-  type?: "real" | "sample" | "";
-  categoryId?: string;
-  status?: "draft" | "active" | "inactive" | "";
-  featured?: boolean;
-  search?: string;
+interface ProductsResponse {
+  products: Product[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+  };
+}
+
+interface ProductResponse {
+  product: Product;
 }
 
 export interface UseProductsOptions {
@@ -89,7 +99,7 @@ export interface UseProductsReturn {
   setPage: (page: number) => void;
 
   // Actions
-  refetch: () => Promise<void>;
+  refetch: () => void;
   selectProduct: (id: string | null) => void;
   createProduct: (
     data: Partial<Product> & { tagIds?: string[] },
@@ -99,34 +109,47 @@ export interface UseProductsReturn {
     data: Partial<Product> & { tagIds?: string[] },
   ) => Promise<Product | null>;
   deleteProduct: (id: string) => Promise<boolean>;
+
+  // Mutation states
+  isCreating: boolean;
+  isUpdating: boolean;
+  isDeleting: boolean;
 }
 
 export function useProducts(
   options: UseProductsOptions = {},
 ): UseProductsReturn {
   const { initialFilters = {}, limit = 20 } = options;
+  const queryClient = useQueryClient();
 
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [filters, setFilters] = useState<ProductFilters>(initialFilters);
+  // Local state for filters and pagination
+  const [filters, setFiltersState] = useState<ProductFilters>(initialFilters);
   const [searchTerm, setSearchTerm] = useState("");
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit,
-    total: 0,
-    totalPages: 0,
-    hasNext: false,
-  });
+  const [page, setPage] = useState(1);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const fetchProducts = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  // Build query params
+  const queryFilters: ProductFilters = useMemo(
+    () => ({
+      ...filters,
+      search: searchTerm || undefined,
+      page,
+      limit,
+    }),
+    [filters, searchTerm, page, limit],
+  );
 
+  // Query for fetching products
+  const {
+    data,
+    isLoading,
+    error: queryError,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.products.list(queryFilters),
+    queryFn: async () => {
       const params = new URLSearchParams();
-      params.append("page", pagination.page.toString());
+      params.append("page", page.toString());
       params.append("limit", limit.toString());
 
       if (filters.type) params.append("type", filters.type);
@@ -135,28 +158,50 @@ export function useProducts(
       if (filters.featured) params.append("featured", "true");
       if (searchTerm) params.append("search", searchTerm);
 
-      const response = await fetch(`/api/products?${params.toString()}`);
-      const data = await response.json();
+      return api.get<ProductsResponse>(`/api/products?${params.toString()}`);
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch products");
-      }
+  // Create mutation
+  const createMutation = useMutation({
+    mutationFn: (input: Partial<Product> & { tagIds?: string[] }) =>
+      api.post<ProductResponse>("/api/products", input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.products.all });
+    },
+  });
 
-      setProducts(data.products);
-      setPagination(data.pagination);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load products");
-    } finally {
-      setLoading(false);
-    }
-  }, [filters, searchTerm, pagination.page, limit]);
+  // Update mutation
+  const updateMutation = useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<Product> & { tagIds?: string[] };
+    }) => api.put<ProductResponse>(`/api/products/${id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.products.all });
+    },
+  });
 
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => api.delete(`/api/products/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.products.all });
+    },
+  });
+
+  // Set filters and reset page
+  const setFilters = useCallback((newFilters: ProductFilters) => {
+    setFiltersState(newFilters);
+    setPage(1); // Reset to first page when filters change
+  }, []);
 
   // Local filtering for instant search
   const filteredProducts = useMemo(() => {
+    const products = data?.products ?? [];
     if (!searchTerm) return products;
 
     const searchLower = searchTerm.toLowerCase();
@@ -166,106 +211,58 @@ export function useProducts(
         product.sku?.toLowerCase().includes(searchLower) ||
         product.description?.toLowerCase().includes(searchLower),
     );
-  }, [products, searchTerm]);
+  }, [data?.products, searchTerm]);
 
-  const setPage = useCallback((page: number) => {
-    setPagination((prev) => ({ ...prev, page }));
-  }, []);
+  // Wrapper functions
+  const createProduct = async (
+    input: Partial<Product> & { tagIds?: string[] },
+  ): Promise<Product | null> => {
+    const result = await createMutation.mutateAsync(input);
+    return result.product;
+  };
+
+  const updateProduct = async (
+    id: string,
+    input: Partial<Product> & { tagIds?: string[] },
+  ): Promise<Product | null> => {
+    const result = await updateMutation.mutateAsync({ id, data: input });
+    return result.product;
+  };
+
+  const deleteProduct = async (id: string): Promise<boolean> => {
+    await deleteMutation.mutateAsync(id);
+    return true;
+  };
 
   const selectProduct = useCallback((id: string | null) => {
     setSelectedId(id);
   }, []);
 
-  const createProduct = useCallback(
-    async (
-      data: Partial<Product> & { tagIds?: string[] },
-    ): Promise<Product | null> => {
-      try {
-        const response = await fetch("/api/products", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.error || "Failed to create product");
-        }
-
-        await fetchProducts();
-        return result.product;
-      } catch (err) {
-        throw err;
-      }
-    },
-    [fetchProducts],
-  );
-
-  const updateProduct = useCallback(
-    async (
-      id: string,
-      data: Partial<Product> & { tagIds?: string[] },
-    ): Promise<Product | null> => {
-      try {
-        const response = await fetch(`/api/products/${id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.error || "Failed to update product");
-        }
-
-        await fetchProducts();
-        return result.product;
-      } catch (err) {
-        throw err;
-      }
-    },
-    [fetchProducts],
-  );
-
-  const deleteProduct = useCallback(
-    async (id: string): Promise<boolean> => {
-      try {
-        const response = await fetch(`/api/products/${id}`, {
-          method: "DELETE",
-        });
-
-        if (!response.ok) {
-          const result = await response.json();
-          throw new Error(result.error || "Failed to delete product");
-        }
-
-        await fetchProducts();
-        return true;
-      } catch (err) {
-        throw err;
-      }
-    },
-    [fetchProducts],
-  );
-
   return {
-    products,
+    products: data?.products ?? [],
     filteredProducts,
-    loading,
-    error,
+    loading: isLoading,
+    error: queryError ? queryError.message : null,
     selectedId,
     filters,
     setFilters,
     searchTerm,
     setSearchTerm,
-    pagination,
+    pagination: data?.pagination ?? {
+      page: 1,
+      limit,
+      total: 0,
+      totalPages: 0,
+      hasNext: false,
+    },
     setPage,
-    refetch: fetchProducts,
+    refetch: () => refetch(),
     selectProduct,
     createProduct,
     updateProduct,
     deleteProduct,
+    isCreating: createMutation.isPending,
+    isUpdating: updateMutation.isPending,
+    isDeleting: deleteMutation.isPending,
   };
 }

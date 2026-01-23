@@ -5,6 +5,7 @@ import { Loader2, AlertCircle, Check, X, Tag as TagIcon } from "lucide-react";
 import Image from "next/image";
 import Modal from "@/components/shared/Modal";
 import { ImageData } from "@/hooks/admin/useImageGallery";
+import { imageUpdateSchema } from "@/lib/validations/image";
 
 interface EditImageModalProps {
   isOpen: boolean;
@@ -72,13 +73,24 @@ export default function EditImageModal({
     setError("");
     setSuccess(false);
 
-    // Validation
-    if (!alt.trim()) {
-      setError("กรุณากรอก Alt Text");
+    if (!image) return;
+
+    // Prepare data for validation
+    const formData = {
+      alt: alt.trim(),
+      title: title.trim() || null,
+      caption: caption.trim() || null,
+      category: category || null,
+      tags: tags.length > 0 ? tags.join(", ") : null,
+    };
+
+    // Validate with Zod schema
+    const validationResult = imageUpdateSchema.safeParse(formData);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.issues[0];
+      setError(firstError.message);
       return;
     }
-
-    if (!image) return;
 
     setIsLoading(true);
 

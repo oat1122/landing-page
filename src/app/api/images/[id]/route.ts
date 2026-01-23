@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { deleteImageFile } from "@/lib/image-utils";
+import { imageUpdateSchema } from "@/lib/validations/image";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
@@ -51,6 +52,13 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     const { id } = await context.params;
     const body = await request.json();
 
+    // Validate with Zod schema
+    const validationResult = imageUpdateSchema.safeParse(body);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.issues[0];
+      return NextResponse.json({ error: firstError.message }, { status: 400 });
+    }
+
     const image = await prisma.image.findUnique({
       where: { id },
     });
@@ -59,17 +67,20 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Image not found" }, { status: 404 });
     }
 
+    const { alt, title, caption, description, category, tags, usedIn } =
+      validationResult.data;
+
     // Update allowed fields
     const updatedImage = await prisma.image.update({
       where: { id },
       data: {
-        alt: body.alt?.trim() || image.alt,
-        title: body.title?.trim() ?? image.title,
-        caption: body.caption?.trim() ?? image.caption,
-        description: body.description?.trim() ?? image.description,
-        category: body.category?.trim() ?? image.category,
-        tags: body.tags?.trim() ?? image.tags,
-        usedIn: body.usedIn ?? image.usedIn,
+        alt: alt?.trim() || image.alt,
+        title: title?.trim() ?? image.title,
+        caption: caption?.trim() ?? image.caption,
+        description: description?.trim() ?? image.description,
+        category: category?.trim() ?? image.category,
+        tags: tags?.trim() ?? image.tags,
+        usedIn: usedIn ?? image.usedIn,
       },
     });
 
