@@ -55,6 +55,7 @@ export function useContactForm(): UseContactFormReturn {
   };
 
   // Calculate completed fields
+  // eslint-disable-next-line react-hooks/incompatible-library
   const values = form.watch();
   const errors = form.formState.errors;
   const completedFields = Object.entries(values).filter(

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Search,
   Plus,
@@ -15,6 +16,7 @@ import {
   Tag,
   Star,
   FolderOpen,
+  Image as ImageIcon,
 } from "lucide-react";
 import { useProducts, Product } from "@/hooks/admin/useProducts";
 import { useCategories } from "@/hooks/admin/useCategories";
@@ -147,7 +149,14 @@ export default function ProductGallery() {
         <h2 className="text-2xl font-bold text-gray-900">
           สินค้าทั้งหมด ({pagination.total})
         </h2>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
+          <Link
+            href="/images"
+            className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            <ImageIcon className="w-5 h-5" />
+            จัดการรูปภาพ
+          </Link>
           <button
             onClick={() => setShowCategoryManager(true)}
             className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
@@ -310,7 +319,7 @@ export default function ProductGallery() {
 
       {/* Products Grid/List */}
       {filteredProducts.length === 0 ? (
-        <EmptyState variant="product" title="ยังไม่มีสินค้า" />
+        <EmptyState variant="inbox" title="ยังไม่มีสินค้า" />
       ) : viewMode === "grid" ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {filteredProducts.map((product) => (

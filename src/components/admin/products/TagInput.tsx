@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Tag as TagIcon, ChevronDown, ChevronUp } from "lucide-react";
+import { X, Tag as TagIcon } from "lucide-react";
 import { useProductTags, ProductTag } from "@/hooks/admin/useProductTags";
 
 interface TagInputProps {

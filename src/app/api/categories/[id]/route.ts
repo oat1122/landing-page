@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { updateCategorySchema } from "@/lib/validations/category";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -49,14 +50,15 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     const { id } = await params;
     const body = await request.json();
-    const { name, description, sortOrder } = body;
 
-    if (!name?.trim()) {
-      return NextResponse.json(
-        { error: "กรุณากรอกชื่อหมวดหมู่" },
-        { status: 400 },
-      );
+    // Validate with Zod schema
+    const validationResult = updateCategorySchema.safeParse(body);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.issues[0];
+      return NextResponse.json({ error: firstError.message }, { status: 400 });
     }
+
+    const { name, description, sortOrder } = validationResult.data;
 
     // Generate new slug
     const slug = name

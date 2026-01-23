@@ -24,9 +24,9 @@ import {
 } from "@/hooks/admin/useInfiniteImageGallery";
 import { LoadingContainer } from "@/components/shared/LoadingSpinner";
 import EmptyState from "@/components/shared/EmptyState";
-import EditImageModal from "@/components/admin/EditImageModal";
+import EditImageModal from "@/components/admin/images/EditImageModal";
 import Modal from "@/components/shared/Modal";
-import ImageUploadForm from "@/components/admin/ImageUploadForm";
+import ImageUploadForm from "@/components/admin/images/ImageUploadForm";
 
 interface ImageGalleryProps {
   onSelect?: (image: ImageData) => void;

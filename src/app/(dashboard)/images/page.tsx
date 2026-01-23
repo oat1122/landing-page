@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import BackButton from "@/components/shared/BackButton";
-import ImageGallery from "@/components/admin/ImageGallery";
+import ImageGallery from "@/components/admin/images/ImageGallery";
 
 export const metadata = {
   title: "จัดการรูปภาพ | Dashboard",

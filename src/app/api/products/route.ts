@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { createProductApiSchema } from "@/lib/validations/product";
 
 // GET - List products with filters and pagination
 export async function GET(request: NextRequest) {
@@ -106,6 +107,14 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+
+    // Validate with Zod schema
+    const validationResult = createProductApiSchema.safeParse(body);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.issues[0];
+      return NextResponse.json({ error: firstError.message }, { status: 400 });
+    }
+
     const {
       name,
       slug: customSlug,
@@ -121,14 +130,7 @@ export async function POST(request: NextRequest) {
       metaDescription,
       status,
       featured,
-    } = body;
-
-    if (!name?.trim()) {
-      return NextResponse.json(
-        { error: "กรุณากรอกชื่อสินค้า" },
-        { status: 400 },
-      );
-    }
+    } = validationResult.data;
 
     // Generate slug from name or use custom slug
     const slug =
@@ -170,8 +172,8 @@ export async function POST(request: NextRequest) {
         slug,
         sku: sku?.trim() || null,
         description: description?.trim() || null,
-        price: price ? parseFloat(price) : null,
-        comparePrice: comparePrice ? parseFloat(comparePrice) : null,
+        price: price ?? null,
+        comparePrice: comparePrice ?? null,
         type: type || "real",
         mainImageId: mainImageId || null,
         categoryId: categoryId || null,
@@ -181,7 +183,7 @@ export async function POST(request: NextRequest) {
         featured: featured || false,
         createdBy: session.user.id,
         tags:
-          tagIds?.length > 0
+          tagIds && tagIds.length > 0
             ? {
                 create: tagIds.map((tagId: string) => ({
                   tagId,

@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { updateProductApiSchema } from "@/lib/validations/product";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -81,6 +82,14 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     const { id } = await params;
     const body = await request.json();
+
+    // Validate with Zod schema
+    const validationResult = updateProductApiSchema.safeParse(body);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.issues[0];
+      return NextResponse.json({ error: firstError.message }, { status: 400 });
+    }
+
     const {
       name,
       slug: customSlug,
@@ -96,14 +105,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       metaDescription,
       status,
       featured,
-    } = body;
-
-    if (!name?.trim()) {
-      return NextResponse.json(
-        { error: "กรุณากรอกชื่อสินค้า" },
-        { status: 400 },
-      );
-    }
+    } = validationResult.data;
 
     // Generate slug from name or use custom slug
     const slug =
@@ -160,18 +162,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
           slug,
           sku: sku?.trim() || null,
           description: description?.trim() || null,
-          price:
-            price !== undefined
-              ? price
-                ? parseFloat(price)
-                : null
-              : undefined,
+          price: price !== undefined ? (price ?? null) : undefined,
           comparePrice:
-            comparePrice !== undefined
-              ? comparePrice
-                ? parseFloat(comparePrice)
-                : null
-              : undefined,
+            comparePrice !== undefined ? (comparePrice ?? null) : undefined,
           type: type || undefined,
           mainImageId:
             mainImageId !== undefined ? mainImageId || null : undefined,
@@ -185,7 +178,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
           status: status || undefined,
           featured: featured !== undefined ? featured : undefined,
           tags:
-            tagIds !== undefined && tagIds?.length > 0
+            tagIds !== undefined && tagIds && tagIds.length > 0
               ? {
                   create: tagIds.map((tagId: string) => ({
                     tagId,

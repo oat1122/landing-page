@@ -3,6 +3,7 @@ import type {
   WebSite,
   LocalBusiness,
   FAQPage,
+  Product,
   WithContext,
 } from "schema-dts";
 import { SITE_NAME, SITE_URL } from "./home.metadata";
@@ -74,6 +75,64 @@ export const faqSchema: WithContext<FAQPage> = {
   "@type": "FAQPage",
   mainEntity: generateFAQSchema(),
 };
+
+// ===== Product Schema Generator =====
+interface ProductSchemaData {
+  name: string;
+  slug: string;
+  description?: string | null;
+  price?: number | null;
+  sku?: string | null;
+  mainImage?: {
+    url: string;
+    alt: string;
+  } | null;
+  category?: {
+    name: string;
+  } | null;
+  status?: string;
+}
+
+export function generateProductSchema(
+  product: ProductSchemaData,
+): WithContext<Product> {
+  const imageUrl = product.mainImage?.url
+    ? product.mainImage.url.startsWith("http")
+      ? product.mainImage.url
+      : `${SITE_URL}${product.mainImage.url}`
+    : `${SITE_URL}/og-image.jpg`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description:
+      product.description || `${product.name} - สินค้าจากโรงงานผลิตเสื้อ`,
+    image: imageUrl,
+    sku: product.sku || undefined,
+    category: product.category?.name,
+    url: `${SITE_URL}/products/${product.slug}`,
+    brand: {
+      "@type": "Brand",
+      name: "โรงงานผลิตเสื้อ",
+    },
+    offers: product.price
+      ? {
+          "@type": "Offer",
+          price: product.price,
+          priceCurrency: "THB",
+          availability:
+            product.status === "active"
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+          seller: {
+            "@type": "Organization",
+            name: "บริษัท ธน พลัส 153 จำกัด",
+          },
+        }
+      : undefined,
+  };
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function JsonLd({ data }: { data: WithContext<any> }) {

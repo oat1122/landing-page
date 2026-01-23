@@ -19,6 +19,7 @@ import ImagePicker from "./ImagePicker";
 import { useCategories } from "@/hooks/admin/useCategories";
 import { Product, ProductTag } from "@/hooks/admin/useProducts";
 import { ImageData } from "@/hooks/admin/useInfiniteImageGallery";
+import { productFormSchema, ProductFormInput } from "@/lib/validations/product";
 
 interface ProductFormProps {
   isOpen: boolean;
@@ -28,22 +29,8 @@ interface ProductFormProps {
   isSubmitting?: boolean;
 }
 
-export interface ProductFormData {
-  name: string;
-  slug?: string;
-  sku?: string;
-  description?: string;
-  price?: number | null;
-  comparePrice?: number | null;
-  type: "real" | "sample";
-  mainImageId?: string | null;
-  categoryId?: string | null;
-  tagIds?: string[];
-  metaTitle?: string;
-  metaDescription?: string;
-  status: "draft" | "active" | "inactive";
-  featured: boolean;
-}
+// Re-export type from validation schema for backward compatibility
+export type ProductFormData = ProductFormInput;
 
 // Helper function to get initial form data from product
 function getInitialFormData(product?: Product | null): ProductFormData {
@@ -138,17 +125,47 @@ export default function ProductForm({
     setError("");
     setSuccess(false);
 
-    if (!formData.name.trim()) {
-      setError("กรุณากรอกชื่อสินค้า");
-      setActiveSection("basic");
+    // Prepare data for validation
+    const dataToValidate = {
+      ...formData,
+      tagIds: selectedTags.map((t) => t.id),
+    };
+
+    // Validate with Zod schema
+    const validationResult = productFormSchema.safeParse(dataToValidate);
+
+    if (!validationResult.success) {
+      // Get the first error message
+      const firstError = validationResult.error.issues[0];
+      setError(firstError.message);
+
+      // Navigate to the appropriate section based on the field
+      const fieldPath = firstError.path[0] as string;
+      if (
+        [
+          "name",
+          "sku",
+          "price",
+          "comparePrice",
+          "description",
+          "type",
+        ].includes(fieldPath)
+      ) {
+        setActiveSection("basic");
+      } else if (fieldPath === "mainImageId") {
+        setActiveSection("image");
+      } else if (["categoryId", "tagIds"].includes(fieldPath)) {
+        setActiveSection("category");
+      } else if (["slug", "metaTitle", "metaDescription"].includes(fieldPath)) {
+        setActiveSection("seo");
+      } else if (["status", "featured"].includes(fieldPath)) {
+        setActiveSection("settings");
+      }
       return;
     }
 
     try {
-      await onSubmit({
-        ...formData,
-        tagIds: selectedTags.map((t) => t.id),
-      });
+      await onSubmit(validationResult.data);
       setSuccess(true);
       setTimeout(() => {
         onClose();

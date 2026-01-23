@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { createProductTagSchema } from "@/lib/validations/product-tag";
 
 // GET - List all tags (with optional search for autocomplete)
 export async function GET(request: NextRequest) {
@@ -45,11 +46,15 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name } = body;
 
-    if (!name?.trim()) {
-      return NextResponse.json({ error: "กรุณากรอกชื่อ Tag" }, { status: 400 });
+    // Validate with Zod schema
+    const validationResult = createProductTagSchema.safeParse(body);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.issues[0];
+      return NextResponse.json({ error: firstError.message }, { status: 400 });
     }
+
+    const { name } = validationResult.data;
 
     // Generate slug from name
     const slug = name
