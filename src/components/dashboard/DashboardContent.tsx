@@ -26,7 +26,7 @@ interface DashboardContentProps {
 
 export default function DashboardContent({ user }: DashboardContentProps) {
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/login" });
+    await signOut({ callbackUrl: "/" });
   };
 
   const stats = [
@@ -183,10 +183,13 @@ export default function DashboardContent({ user }: DashboardContentProps) {
                 <Users className="w-8 h-8 text-pink-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-white text-sm">เพิ่มลูกค้า</span>
               </button>
-              <button className="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors text-center group">
+              <Link
+                href="/admin-products"
+                className="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors text-center group"
+              >
                 <Package className="w-8 h-8 text-cyan-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-white text-sm">จัดการสินค้า</span>
-              </button>
+              </Link>
               <button className="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors text-center group">
                 <FileText className="w-8 h-8 text-amber-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-white text-sm">ดูรายงาน</span>

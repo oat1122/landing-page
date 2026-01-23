@@ -23,6 +23,7 @@ model User {
   accounts Account[]
   sessions Session[]
   images   Image[]
+  products Product[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -101,6 +102,9 @@ model Image {
   uploadedBy  String?              // User ID ที่อัพโหลด
   user        User?    @relation(fields: [uploadedBy], references: [id], onDelete: SetNull)
   
+  // Products using this image
+  products    Product[]
+  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
@@ -108,3 +112,98 @@ model Image {
   @@index([uploadedBy])
   @@map("image")
 }
+
+// =========================================
+// Product Management Models
+// =========================================
+
+// Product Category (1 product = 1 category)
+model ProductCategory {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?   @db.Text
+  sortOrder   Int       @default(0)
+  
+  products    Product[]
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@map("product_category")
+}
+
+// Product Tags (1 product = many tags)
+model ProductTag {
+  id        String           @id @default(uuid())
+  name      String           @unique
+  slug      String           @unique
+  
+  products  ProductToTag[]
+  
+  createdAt DateTime         @default(now())
+  
+  @@map("product_tag")
+}
+
+// Product
+model Product {
+  id           String         @id @default(uuid())
+  
+  // Basic Info
+  name         String
+  slug         String         @unique
+  sku          String?        @unique
+  description  String?        @db.Text
+  
+  // Pricing
+  price        Decimal?       @db.Decimal(10, 2)
+  comparePrice Decimal?       @db.Decimal(10, 2)
+  
+  // Type: real or sample
+  type         String         @default("real") // "real" | "sample"
+  
+  // Image from existing Image system
+  mainImageId  String?
+  mainImage    Image?         @relation(fields: [mainImageId], references: [id], onDelete: SetNull)
+  
+  // Category (1 product = 1 category)
+  categoryId   String?
+  category     ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  
+  // Tags (many-to-many)
+  tags         ProductToTag[]
+  
+  // SEO fields
+  metaTitle       String?
+  metaDescription String?      @db.Text
+  
+  // Status
+  status       String         @default("draft") // "draft" | "active" | "inactive"
+  featured     Boolean        @default(false)
+  
+  // Metadata
+  createdBy    String?
+  user         User?          @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+  
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  
+  @@index([categoryId])
+  @@index([status])
+  @@index([type])
+  @@index([createdBy])
+  @@map("product")
+}
+
+// Junction table for Product-Tag many-to-many
+model ProductToTag {
+  product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  String
+  tag        ProductTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  
+  @@id([productId, tagId])
+  @@map("product_to_tag")
+}
+
